@@ -22,6 +22,20 @@ Public research reference and safe reproduction material for a stored cross-site
 | CVE | No known CVE at repository publication time |
 | Researcher | Fernando Viana — [Capivara Research](https://github.com/capivara-research) |
 
+## Verification evidence
+
+The screenshot below is a direct capture of the checker included in this repository running against exact upstream tags. TypeMill `v2.26.0` lacks all four controls used by the fix; `v2.27.0` contains all four.
+
+![Executed TypeMill checker comparing vulnerable v2.26.0 with fixed v2.27.0](./evidence/typemill-vulnerable-vs-fixed.png)
+
+What this proves:
+
+- the vulnerable tag does not disable networked XML loading, reject DOCTYPEs, handle processing-instruction nodes, or call the central removal routine;
+- the fixed tag contains those four controls;
+- the result comes from the public, non-invasive `poc/check_source.py` checker and exact upstream tags.
+
+This is source-level proof of the vulnerable-versus-fixed sanitizer behavior. Browser XSLT behavior can vary, so the screenshot is not presented as universal client-side execution evidence.
+
 ## Summary
 
 Before version 2.27.0, TypeMill sanitized the elements and attributes of uploaded SVG documents but did not remove XML processing instructions. An authenticated contributor could therefore upload an SVG containing an `xml-stylesheet` processing instruction. The instruction survived sanitization, and TypeMill served the stored document as `image/svg+xml` from its own origin.
